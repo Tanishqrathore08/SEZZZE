@@ -1,18 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SEZZZE | Reality By Design</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700;900&display=swap"
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -20,14 +18,13 @@
             box-sizing: border-box;
             cursor: none;
         }
-
         body {
             background: #F5F5F7;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             color: #111;
+            overscroll-behavior-y: none; 
         }
-
         #custom-cursor {
             position: fixed;
             top: 0;
@@ -40,8 +37,8 @@
             z-index: 10001;
             mix-blend-mode: difference;
             transform: translate(-50%, -50%);
+            will-change: transform; 
         }
-
         #canvas-container {
             position: fixed;
             top: 0;
@@ -51,12 +48,10 @@
             z-index: 20;
             pointer-events: none;
         }
-
         .content {
             position: relative;
             z-index: 10;
         }
-
         #noise {
             position: fixed;
             inset: 0;
@@ -66,7 +61,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             mix-blend-mode: multiply;
         }
-
         #loader {
             position: fixed;
             inset: 0;
@@ -77,38 +71,33 @@
             align-items: center;
             justify-content: center;
         }
-
         .loader-wrapper {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .loader-text {
             font-family: 'Anton', sans-serif;
-            font-size: 20vw;
+            font-size: clamp(60px, 20vw, 250px);
             line-height: 1;
             position: absolute;
             white-space: nowrap;
         }
-
         .loader-outline {
             -webkit-text-stroke: 1px rgba(255, 255, 255, .1);
             color: transparent;
         }
-
         .loader-fill {
             color: #D32F2F;
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
         }
-
         nav {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 30px;
+            padding: clamp(15px, 3vw, 30px);
             display: flex;
             justify-content: space-between;
             z-index: 100;
@@ -116,19 +105,17 @@
             color: #fff;
             font-weight: 900;
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: clamp(10px, 1.5vw, 12px);
             letter-spacing: 2px;
         }
-
         .interactive-hover {
             transition: transform 0.3s ease;
             display: inline-block;
         }
-
         #music-btn {
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            bottom: clamp(15px, 3vw, 30px);
+            left: clamp(15px, 3vw, 30px);
             z-index: 100;
             font-weight: 900;
             font-size: 10px;
@@ -141,166 +128,117 @@
             border-radius: 30px;
             transition: all 0.3s ease;
         }
-
         #music-btn:hover {
             background: #fff;
             color: #000;
         }
-
         .hero {
             height: 100vh;
+            height: 100dvh; 
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-
         .char {
             font-family: 'Anton', sans-serif;
-            font-size: 22vw;
+            font-size: clamp(70px, 26vw, 300px); 
             color: #D32F2F;
             line-height: .8;
             transform: translateY(110%);
             display: inline-block;
+            will-change: transform;
         }
-
         .section {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 0 10vw;
+            padding: 0 clamp(5vw, 10vw, 10vw);
             perspective: 1000px;
         }
-
         .title {
             font-family: 'Anton', sans-serif;
-            font-size: 12vw;
+            font-size: clamp(45px, 12vw, 180px);
             line-height: .85;
             text-transform: uppercase;
         }
-
         .chamber {
-            height: 200vh;
+            height: clamp(120vh, 150vh, 200vh); 
             background: #050505;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: center; /* Centered nicely */
+            gap: 12vh; /* Smooth, even spacing between brands */
             overflow: hidden;
+            padding: 15vh 0;
         }
-
-        .brand {
-            font-family: 'Anton', sans-serif;
-            text-transform: uppercase;
-            line-height: .7;
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, .1);
-            font-size: 16vw;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .brand:hover {
-            color: #fff;
-            -webkit-text-stroke: 1px #fff;
-            transform: scale(1.05) skewX(-5deg) !important;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
         footer {
             background: #D32F2F;
-            padding: 15vh 0;
+            padding: clamp(10vh, 15vh, 15vh) 5vw;
             text-align: center;
             color: #fff;
             overflow: hidden;
         }
-
         .footer-title {
             font-family: 'Anton', sans-serif;
-            font-size: 9vw;
+            font-size: clamp(35px, 9vw, 150px);
             text-transform: uppercase;
             line-height: 1;
         }
-
-        @media(max-width: 1024px) {
-            .title {
-                font-size: 14vw;
-            }
-
+        /* --- DESKTOP LUXURY TYPOGRAPHY --- */
+        @media(min-width: 769px) {
             .brand {
-                font-size: 14vw;
+                font-family: 'Anton', sans-serif;
+                text-transform: uppercase;
+                line-height: .7;
+                color: transparent;
+                -webkit-text-stroke: 1px rgba(255, 255, 255, .1);
+                font-size: clamp(40px, 14vw, 200px);
+                transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                will-change: transform;
+            }
+            .brand:hover {
+                color: #fff;
+                -webkit-text-stroke: 1px #fff;
+                transform: scale(1.05) skewX(-5deg) !important;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             }
         }
-
+        /* --- MOBILE LUXURY TYPOGRAPHY --- */
         @media(max-width: 768px) {
-            * {
-                cursor: auto;
-            }
-
-            #custom-cursor {
-                display: none !important;
-            }
-
-            nav {
-                padding: 20px 15px;
-                font-size: 10px;
-            }
-
-            #music-btn {
-                bottom: 20px;
-                left: 15px;
-                padding: 6px 12px;
-            }
-
-            .char {
-                font-size: 20vw;
-            }
-
-            .title {
-                font-size: 16vw;
-            }
-
-            .chamber {
-                height: 120vh;
-                padding: 10vh 0;
-            }
-
+            * { cursor: auto !important; }
+            #custom-cursor { display: none !important; }
+            
             .brand {
-                font-size: 18vw;
-                letter-spacing: 2px;
+                font-family: 'Anton', sans-serif;
+                text-transform: uppercase;
+                line-height: .7;
+                color: transparent; 
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2); /* Sleek outline */
+                font-size: clamp(40px, 15vw, 200px);
+                transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+                will-change: transform, color;
             }
-
-            footer {
-                padding: 10vh 5vw;
-            }
-
-            .footer-title {
-                font-size: 13vw;
-            }
-
-            .footer-subtitle {
-                font-size: 14px !important;
-                line-height: 1.4 !important;
-            }
-
-            .footer-micro {
-                font-size: 10px !important;
+            
+            .brand-active {
+                color: #fff !important; 
+                -webkit-text-stroke: 1px #fff !important;
+                transform: scale(1.05) skewX(-2deg) !important;
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); /* Soft luxury glow */
             }
         }
     </style>
 </head>
-
 <body>
     <div id="custom-cursor"></div>
     <div id="noise"></div>
-
     <div id="loader">
         <div class="loader-wrapper w-full h-40">
             <div class="loader-text loader-outline">SEZZZE</div>
             <div class="loader-text loader-fill" id="fill">SEZZZE</div>
         </div>
     </div>
-
     <div id="music-btn" class="interactive-hover">Sound: Off</div>
-
     <nav>
         <div class="interactive-hover">SEZZZE.</div>
         <div class="flex gap-4 md:gap-6">
@@ -308,9 +246,7 @@
             <div class="interactive-hover">EXPERIENCE</div>
         </div>
     </nav>
-
     <div id="canvas-container"></div>
-
     <div class="content">
         <section class="hero">
             <div class="overflow-hidden flex" id="hero-text">
@@ -318,41 +254,36 @@
                     class="char">Z</span><span class="char">Z</span><span class="char">E</span>
             </div>
         </section>
-
         <section class="section">
             <div class="w-full">
                 <h2 class="title">
                     DIGITAL<br>
                     <span class="text-[#D32F2F]">EVOLUTION.</span>
                 </h2>
-                <p class="text-gray-500 font-medium text-base md:text-xl mt-4 md:mt-6 max-w-sm">
+                <p class="text-gray-500 font-medium text-sm md:text-xl mt-4 md:mt-6 max-w-sm">
                     Interactive artifacts for the modern explorer. Experience the next generation of web.
                 </p>
             </div>
         </section>
-
         <section class="chamber" id="trigger">
             <div class="brand">BALENCIAGA</div>
             <div class="brand text-right">RICK OWENS</div>
             <div class="brand">OFF-WHITE™</div>
             <div class="brand text-right">MARGIELA</div>
         </section>
-
         <footer>
             <h2 class="footer-title parallax-element">REALITY BY DESIGN.</h2>
             <div class="mt-6 md:mt-8 max-w-4xl mx-auto px-4 text-center">
-                <p class="footer-subtitle font-bold uppercase tracking-widest text-lg md:text-2xl leading-relaxed mb-4">
+                <p class="font-bold uppercase tracking-widest text-sm md:text-2xl leading-relaxed mb-4">
                     Designing systems that shape how humans and machines connect.
                 </p>
-                <p
-                    class="footer-micro font-medium uppercase tracking-widest text-xs md:text-sm text-white/80 leading-loose">
+                <p class="font-medium uppercase tracking-widest text-[10px] md:text-sm text-white/80 leading-loose">
                     From interactive extensions to perceptual interfaces.<br>
                     This work lives at the intersection of human perception and digital technology.
                 </p>
             </div>
         </footer>
     </div>
-
     <script type="importmap">
         {
             "imports": {
@@ -361,46 +292,45 @@
             }
         }
     </script>
-
     <script type="module">
         import * as THREE from 'three';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
         gsap.registerPlugin(ScrollTrigger);
-
-        let mobile = window.innerWidth < 768;
+        const checkMobile = () => window.innerWidth <= 480;
+        const checkTablet = () => window.innerWidth > 480 && window.innerWidth <= 768;
+        
+        let isMobile = checkMobile();
+        let isTablet = checkTablet();
         const cursor = document.getElementById('custom-cursor');
         let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
-
-        if (!mobile) {
+        if (!isMobile && !isTablet) {
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
-
             gsap.ticker.add(() => {
                 cursorX += (mouseX - cursorX) * 0.6;
                 cursorY += (mouseY - cursorY) * 0.6;
                 gsap.set(cursor, { x: cursorX, y: cursorY });
             });
-
             document.querySelectorAll('.interactive-hover, .brand').forEach(el => {
                 el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 3, backgroundColor: '#fff', duration: 0.3 }));
                 el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, backgroundColor: '#D32F2F', duration: 0.3 }));
             });
         }
-
-        const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        const lenis = new Lenis({ 
+            duration: 1.2, 
+            easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothTouch: false 
+        });
         function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
         lenis.stop();
-
         const audio = new Audio('ambient.mp3');
         audio.loop = true;
         let playing = false;
         const btn = document.getElementById('music-btn');
-
         btn.onclick = () => {
             if (!playing) {
                 audio.play();
@@ -412,44 +342,52 @@
             }
             playing = !playing;
         };
-
         const scene = new THREE.Scene();
         const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, .1, 100);
-        cam.position.z = 5;
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        cam.position.z = isMobile ? 5.5 : (isTablet ? 6.5 : 5);
+        const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true }); 
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
         document.getElementById('canvas-container').appendChild(renderer.domElement);
-
         const pmrem = new THREE.PMREMGenerator(renderer);
         scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
-
         const shoeGrp = new THREE.Group();
         scene.add(shoeGrp);
-
-        let baseScale = mobile ? 3.5 : 9;
-        let loaded = false;
-
-        new GLTFLoader().load('sneaker.glb', g => {
-            const m = g.scene;
-            const box = new THREE.Box3().setFromObject(m);
-            m.position.sub(box.getCenter(new THREE.Vector3()));
-            m.scale.set(baseScale, baseScale, baseScale);
-            shoeGrp.position.set(0, 15, -10);
-            shoeGrp.add(m);
-            renderer.compile(scene, cam);
-            loaded = true;
-        });
-
+        let modelLoaded = false;
+        let loaderFinished = false;
         let prog = { v: 0 };
         gsap.to(prog, {
-            v: 100, duration: 3, ease: "power2.inOut",
+            v: 100, 
+            duration: 2.5, 
+            ease: "power2.inOut",
             onUpdate: () => {
                 let p = 100 - prog.v;
                 document.getElementById('fill').style.clipPath = `polygon(0 ${p}%,100% ${p}%,100% 100%,0 100%)`;
             },
             onComplete: () => {
+                loaderFinished = true;
+                checkReadyToStart();
+            }
+        });
+        new GLTFLoader().load('sneaker.glb', g => {
+            const m = g.scene;
+            const box = new THREE.Box3().setFromObject(m);
+            m.position.sub(box.getCenter(new THREE.Vector3()));
+            
+            let scaleVal = isMobile ? 10.5 : (isTablet ? 6 : 9);
+            m.scale.set(scaleVal, scaleVal, scaleVal);
+            
+            shoeGrp.position.set(0, 50, -10);
+            shoeGrp.add(m);
+            setTimeout(() => {
+                renderer.render(scene, cam); 
+                modelLoaded = true;
+                checkReadyToStart();
+            }, 50);
+        });
+        function checkReadyToStart() {
+            if (modelLoaded && loaderFinished) {
                 gsap.to("#loader", {
                     yPercent: -100,
                     duration: 1, ease: "expo.inOut",
@@ -458,33 +396,59 @@
                         lenis.start();
                     }
                 });
-
                 gsap.to(".char", {
                     y: "0%", duration: 1.2, stagger: .08,
                     ease: "back.out(1.2)", delay: 0.3
                 });
-
-                if (loaded) {
+                shoeGrp.position.set(0, 10, -5);
+                let mm = gsap.matchMedia();
+                
+                mm.add("(max-width: 768px)", () => {
                     gsap.fromTo(shoeGrp.position,
                         { y: 10, z: -5 },
-                        { y: mobile ? -0.5 : 0, z: mobile ? 0 : 1.5, duration: 2.5, ease: "power4.out", delay: .5 }
+                        { y: -0.5, z: 0, duration: 2.5, ease: "power4.out", delay: .5 }
                     );
-                    gsap.fromTo(shoeGrp.rotation,
-                        { x: Math.PI, y: -Math.PI },
-                        { x: .3, y: -.5, duration: 3, ease: "power3.out", delay: .5 }
+                });
+                mm.add("(min-width: 769px)", () => {
+                    gsap.fromTo(shoeGrp.position,
+                        { y: 10, z: -5 },
+                        { y: 0, z: 1.5, duration: 2.5, ease: "power4.out", delay: .5 }
                     );
-                }
+                });
+                gsap.fromTo(shoeGrp.rotation,
+                    { x: Math.PI, y: -Math.PI },
+                    { x: .3, y: -.5, duration: 3, ease: "power3.out", delay: .5 }
+                );
             }
+        }
+        let mm = gsap.matchMedia();
+        mm.add("(min-width: 769px)", () => {
+            const tl = gsap.timeline({
+                scrollTrigger: { trigger: ".content", start: "top top", end: "+=250%", scrub: 1.5 }
+            });
+            tl.to(shoeGrp.position, { y: -5, x: 3, z: -3, ease: "power2.inOut" }, 0);
+            tl.to(shoeGrp.rotation, { y: Math.PI * 2.5, x: -.2, ease: "power1.inOut" }, 0);
+            tl.to(shoeGrp.scale, { x: 0.6, y: 0.6, z: 0.6, ease: "none" }, .5);
         });
-
-        const tl = gsap.timeline({
-            scrollTrigger: { trigger: ".content", start: "top top", end: "+=250%", scrub: 2 }
+        mm.add("(max-width: 768px)", () => {
+            const tl = gsap.timeline({
+                scrollTrigger: { trigger: ".content", start: "top top", end: "+=200%", scrub: 0.5 } 
+            });
+            
+            // The Cinematic Spin & Zoom
+            tl.to(shoeGrp.position, { y: -2.5, x: 0, z: 1.5, ease: "power2.inOut" }, 0);
+            tl.to(shoeGrp.rotation, { y: Math.PI * 3.5, x: 0.1, ease: "power1.inOut" }, 0);
+            tl.to(shoeGrp.scale, { x: 1.25, y: 1.25, z: 1.25, ease: "power2.inOut" }, 0);
+            // Pop the brand names beautifully as you scroll past
+            gsap.utils.toArray('.brand').forEach(brand => {
+                ScrollTrigger.create({
+                    trigger: brand,
+                    start: "top 65%",   
+                    end: "bottom 35%",  
+                    toggleClass: "brand-active" 
+                });
+            });
         });
-
-        tl.to(shoeGrp.position, { y: mobile ? -2 : -5, x: mobile ? 0 : 3, z: mobile ? -3 : -3, ease: "power2.inOut" }, 0);
-        tl.to(shoeGrp.rotation, { y: Math.PI * 2.5, x: -.2, ease: "power1.inOut" }, 0);
-        tl.to(shoeGrp.scale, { x: mobile ? .4 : .6, y: mobile ? .4 : .6, z: mobile ? .4 : .6, ease: "none" }, .5);
-
         gsap.utils.toArray('.parallax-element').forEach(el => {
             gsap.to(el, {
                 yPercent: 30,
@@ -492,23 +456,36 @@
                 scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true }
             });
         });
-
-        gsap.to(".brand:nth-child(1), .brand:nth-child(3)", { xPercent: -20, scrollTrigger: { trigger: "#trigger", scrub: 1 } });
-        gsap.to(".brand:nth-child(2), .brand:nth-child(4)", { xPercent: 20, scrollTrigger: { trigger: "#trigger", scrub: 1 } });
-
+        gsap.to(".brand:nth-child(1), .brand:nth-child(3)", { xPercent: -10, scrollTrigger: { trigger: "#trigger", scrub: 0.5 } });
+        gsap.to(".brand:nth-child(2), .brand:nth-child(4)", { xPercent: 10, scrollTrigger: { trigger: "#trigger", scrub: 0.5 } });
+        gsap.to("#canvas-container", {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "footer",
+                start: "top 80%", 
+                end: "top 20%",   
+                scrub: true
+            }
+        });
         let targetX = 0, targetY = 0;
-        if (!mobile) {
+        if (!isMobile && !isTablet) {
             window.addEventListener('mousemove', (e) => {
                 targetX = (e.clientX / window.innerWidth) * 2 - 1;
                 targetY = -(e.clientY / window.innerHeight) * 2 + 1;
             });
         }
-
         const clock = new THREE.Clock();
         function animate() {
-            if (loaded) {
+            if (modelLoaded) {
+                // Breathing/Floating Effect (All devices)
                 shoeGrp.position.y += Math.sin(clock.getElapsedTime() * 1.5) * .0008;
-                if (!mobile) {
+                
+                if (isMobile || isTablet) {
+                    // NEW: Continuous premium slow-rotation for mobile!
+                    shoeGrp.rotation.y -= 0.003; 
+                } else {
+                    // Desktop mouse parallax
                     shoeGrp.rotation.y += (targetX * 0.3 - shoeGrp.rotation.y) * 0.05;
                     shoeGrp.rotation.x += (targetY * 0.15 + 0.3 - shoeGrp.rotation.x) * 0.05;
                 }
@@ -517,14 +494,25 @@
             requestAnimationFrame(animate);
         }
         animate();
-
-        window.onresize = () => {
-            mobile = window.innerWidth < 768;
-            cam.aspect = window.innerWidth / window.innerHeight;
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            isMobile = width <= 480;
+            isTablet = width > 480 && width <= 768;
+            cam.aspect = width / height;
+            cam.position.z = isMobile ? 5.5 : (isTablet ? 6.5 : 5);
             cam.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
+            
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+            if(modelLoaded && shoeGrp.children.length > 0) {
+                 let scaleVal = isMobile ? 10.5 : (isTablet ? 6 : 9);
+                 if(window.scrollY < 10) { 
+                     shoeGrp.children[0].scale.set(scaleVal, scaleVal, scaleVal);
+                 }
+            }
+        });
     </script>
 </body>
-
 </html>
